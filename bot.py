@@ -1,59 +1,32 @@
 import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update
 from telegram.ext import (
-    ApplicationBuilder,
-    ChatJoinRequestHandler,
+    Updater,
     CommandHandler,
-    CallbackQueryHandler,
-    ContextTypes,
+    ChatJoinRequestHandler,
+    CallbackContext
 )
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = (
-        "👋 *Welcome to Auto Join Request Bot*\n\n"
-        "🔗 *Official Collections*\n\n"
-        "1️⃣ Open Collection\n"
-        "https://t.me/+cV6_p6hE_Lw2MTE0\n\n"
-        "2️⃣ Instagram Viral Collection\n"
-        "https://t.me/+GLRGYAGH9bc0MTU0\n\n"
-        "3️⃣ Open Hub\n"
-        "https://t.me/+Xc9JoxboVFdmZGJk"
-    )
-    await update.message.reply_text(text, parse_mode="Markdown")
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("✅ Bot is running!")
 
-async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    req = update.chat_join_request
-    await context.bot.approve_chat_join_request(req.chat.id, req.from_user.id)
-
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("▶️ START", callback_data="start")]
-    ])
-
+def approve_request(update: Update, context: CallbackContext):
     try:
-        await context.bot.send_message(
-            chat_id=req.from_user.id,
-            text="✅ *Request Approved!*\nTap START 👇",
-            reply_markup=keyboard,
-            parse_mode="Markdown"
-        )
-    except:
-        pass
-
-async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.callback_query.answer()
-    await start(update.callback_query, context)
+        update.chat_join_request.approve()
+    except Exception as e:
+        print(e)
 
 def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    updater = Updater(BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(ChatJoinRequestHandler(approve))
-    app.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(ChatJoinRequestHandler(approve_request))
 
-    print("Bot is running...")
-    app.run_polling()
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == "__main__":
     main()

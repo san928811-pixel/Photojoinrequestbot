@@ -2,17 +2,14 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     ApplicationBuilder,
-    CommandHandler,
-    ContextTypes,
     ChatJoinRequestHandler,
+    CommandHandler,
     CallbackQueryHandler,
+    ContextTypes,
 )
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
-# ======================
-# /start command
-# ======================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         "👋 *Welcome to Auto Join Request Bot*\n\n"
@@ -24,51 +21,36 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "3️⃣ Open Hub\n"
         "https://t.me/+Xc9JoxboVFdmZGJk"
     )
+    await update.message.reply_text(text, parse_mode="Markdown")
 
-    if update.message:
-        await update.message.reply_text(text, parse_mode="Markdown")
-    else:
-        await update.callback_query.message.reply_text(text, parse_mode="Markdown")
+async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    req = update.chat_join_request
+    await context.bot.approve_chat_join_request(req.chat.id, req.from_user.id)
 
-# ======================
-# Auto approve join request
-# ======================
-async def approve_request(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.chat_join_request.chat.id
-    user_id = update.chat_join_request.from_user.id
-
-    await context.bot.approve_chat_join_request(chat_id, user_id)
-
-    keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("▶️ START", callback_data="start")]]
-    )
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("▶️ START", callback_data="start")]
+    ])
 
     try:
         await context.bot.send_message(
-            user_id,
-            "✅ *Request Approved!*\n\nTap START to continue 👇",
+            chat_id=req.from_user.id,
+            text="✅ *Request Approved!*\nTap START 👇",
             reply_markup=keyboard,
-            parse_mode="Markdown",
+            parse_mode="Markdown"
         )
     except:
         pass
 
-# ======================
-# Button handler
-# ======================
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
-    await start(update, context)
+    await start(update.callback_query, context)
 
-# ======================
-# Main
-# ======================
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(ChatJoinRequestHandler(approve_request))
-    app.add_handler(CallbackQueryHandler(button_handler))
+    app.add_handler(ChatJoinRequestHandler(approve))
+    app.add_handler(CallbackQueryHandler(button))
 
     print("Bot is running...")
     app.run_polling()

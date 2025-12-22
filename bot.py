@@ -12,21 +12,14 @@ from telegram.ext import (
     ContextTypes,
 )
 
-# ===============================
-# 🔑 BOT TOKEN (ENV VARIABLE)
-# ===============================
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN is not set")
 
 # ===============================
-# 📩 START COMMAND (WELCOME)
+# START COMMAND
 # ===============================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    welcome_text = (
+    text = (
         "👋 *Welcome to Auto Join Request*\n\n"
-        "🎯 *Free & Open Collections*\n"
-        "🔗 Use only official links below\n\n"
         "1️⃣ *Open Collection*\n"
         "https://t.me/+cV6_p6hE_Lw2MTE0\n\n"
         "2️⃣ *Instagram Viral Collection*\n"
@@ -36,52 +29,42 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     if update.message:
-        await update.message.reply_text(
-            welcome_text,
-            parse_mode="Markdown"
-        )
-    elif update.callback_query:
-        await update.callback_query.message.reply_text(
-            welcome_text,
-            parse_mode="Markdown"
-        )
+        await update.message.reply_text(text, parse_mode="Markdown")
+    else:
+        await update.callback_query.message.reply_text(text, parse_mode="Markdown")
 
 # ===============================
-# ✅ AUTO JOIN REQUEST HANDLER
+# AUTO APPROVE JOIN REQUEST
 # ===============================
 async def approve_request(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.chat_join_request.chat.id
     user_id = update.chat_join_request.from_user.id
 
-    # Approve join request
     await context.bot.approve_chat_join_request(chat_id, user_id)
 
-    # DM welcome + START button
     keyboard = InlineKeyboardMarkup(
         [[InlineKeyboardButton("▶️ START", callback_data="start")]]
     )
 
     try:
         await context.bot.send_message(
-            chat_id=user_id,
-            text="✅ *You are approved!*\n\n👇 Tap below to get welcome & links",
+            user_id,
+            "✅ *Approved successfully!*\n\nTap START below 👇",
             reply_markup=keyboard,
-            parse_mode="Markdown"
+            parse_mode="Markdown",
         )
     except:
-        # User ne bot start nahi kiya ho to Telegram DM allow nahi karta
         pass
 
 # ===============================
-# ▶️ BUTTON CALLBACK
+# BUTTON HANDLER
 # ===============================
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
+    await update.callback_query.answer()
     await start(update, context)
 
 # ===============================
-# 🚀 MAIN
+# MAIN
 # ===============================
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()

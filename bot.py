@@ -22,7 +22,7 @@ DATA_FILE = "active_chats.json"
 CHANNELS = [
     ("1️⃣ Open Hub", "https://t.me/+io6YMU0BtAs0MzZk"),
     ("2️⃣ Open Collection", "https://t.me/+FK2K07SHP8kzZjRk"),
-    ("3️⃣ Special Hub", "https://t.me/+k3PFfGwQ8Xo4MjBk"),
+    ("3️⃣ Specia hub", "https://t.me/+b7jlwKJ5wI8xYjM0"),
     ("4️⃣ Instagram Collection", "https://t.me/+dVLzuQk-msw3MjBk"),
 ]
 

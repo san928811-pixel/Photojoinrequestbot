@@ -20,10 +20,10 @@ DATA_FILE = "active_chats.json"
 
 # 🔗 WELCOME LINKS (FINAL – AS YOU GAVE)
 CHANNELS = [
-    ("1️⃣ Open Hub", "https://t.me/+io6YMU0BtAs0MzZk"),
-    ("2️⃣ Open Collection", "https://t.me/+FK2K07SHP8kzZjRk"),
-    ("3️⃣ Specia hub", "https://t.me/+b7jlwKJ5wI8xYjM0"),
-    ("4️⃣ Instagram Collection", "https://t.me/+dVLzuQk-msw3MjBk"),
+    ("1️⃣ Open Hub", "https://t.me/+r4xMyDg462A4YjVk"),
+    ("2️⃣ Open Collection", "https://t.me/+OfS8tgNrVOw1MzI0"),
+    ("3️⃣ Specia hub", "https://t.me/+a0YgMDfN2Lo3NTNk"),
+    ("4️⃣ Instagram Collection", "https://t.me/+ESGjVB7mhp8yMGI0"),
 ]
 
 # ======================

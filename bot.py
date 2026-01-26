@@ -23,7 +23,7 @@ CHANNELS = [
     ("1️⃣ Open Hub", "https://t.me/+sCtEN4-CDFJjMzM1"),
     ("2️⃣ Open Collection", "https://t.me/+vb1Tp5N40dw3MGI9"),
     ("3️⃣ Specia hub", "https://t.me/+PKHz0Nu_9zZiZjZl"),
-    ("4️⃣ Instagram Collection", "https://t.me/+ESGjVB7mhp8yMGI0"),
+    ("4️⃣ Instagram Collection", "https://t.me/+HmxS-ygBUHA4ZGVk"),
 ]
 
 # ======================
